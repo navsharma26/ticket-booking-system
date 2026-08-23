@@ -33,22 +33,22 @@ app.get('/', (req, res) => {
   res.json({ message: 'Ticket Booking API is running...' });
 });
 
-// Database connection & start server
+// Start server immediately
 const PORT = process.env.PORT || 5000;
 const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/ticket-booking';
 
-mongoose
-  .connect(MONGODB_URI)
-  .then(() => {
-    console.log('Successfully connected to MongoDB.');
-    
-    // Start background workers
-    startHoldExpiryWorker();
-
-    httpServer.listen(PORT, () => {
-      console.log(`Server is running on port ${PORT}`);
+httpServer.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
+  
+  // Connect to MongoDB asynchronously
+  mongoose
+    .connect(MONGODB_URI)
+    .then(() => {
+      console.log('Successfully connected to MongoDB.');
+      // Start background workers
+      startHoldExpiryWorker();
+    })
+    .catch((error) => {
+      console.error('Database connection error:', error.message);
     });
-  })
-  .catch((error) => {
-    console.error('Database connection error:', error);
-  });
+});
