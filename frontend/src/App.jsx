@@ -633,12 +633,29 @@ export default function App() {
                 )}
               </div>
             ) : (
-              <div className="h-full min-h-[300px] bg-slate-900/20 border-2 border-dashed border-slate-800/80 rounded-3xl flex flex-col items-center justify-center p-8 text-center text-slate-500">
-                <div className="p-4 bg-slate-900/40 rounded-full border border-slate-800/80 mb-4">
-                  <Ticket className="w-10 h-10 text-slate-600" />
+              <div className="h-full min-h-[400px] bg-slate-900/40 border border-slate-800/80 rounded-3xl flex flex-col overflow-hidden shadow-xl animate-fade-in duration-500">
+                <div className="relative flex-1 min-h-[280px] overflow-hidden">
+                  <img
+                    src="/ad.png"
+                    alt="Live Concert Tickets Booking Advertisement"
+                    className="w-full h-full object-cover object-center opacity-85 transition-transform duration-700 hover:scale-102"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/40 to-transparent" />
+                  <div className="absolute bottom-6 left-6 right-6 text-left space-y-2">
+                    <span className="px-3 py-1 bg-violet-600/25 border border-violet-500/30 text-violet-300 rounded-full text-[10px] font-black uppercase tracking-widest">
+                      Featured Events
+                    </span>
+                    <h3 className="text-2xl font-black text-white leading-tight">
+                      Experience the Magic of Live Music
+                    </h3>
+                  </div>
                 </div>
-                <h3 className="text-lg font-bold text-slate-400">No Show Selected</h3>
-                <p className="text-sm max-w-xs mt-1 leading-relaxed">Please select an active show from the sidebar to inspect the real-time seat map.</p>
+                <div className="p-6 bg-slate-950/60 border-t border-slate-800/60 flex flex-col items-center justify-center text-center space-y-2">
+                  <h4 className="text-sm font-bold text-slate-400">No Show Selected</h4>
+                  <p className="text-xs text-slate-500 max-w-sm leading-relaxed">
+                    Please select an active show from the sidebar to inspect the real-time seat map, reserve holds, and book your tickets.
+                  </p>
+                </div>
               </div>
             )}
           </div>
