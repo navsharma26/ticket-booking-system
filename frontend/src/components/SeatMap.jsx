@@ -11,7 +11,7 @@ export default function SeatMap({
 }) {
   useEffect(() => {
     // Connect to Backend Socket.io Server
-    const socket = io('http://localhost:5000');
+    const socket = io('http://localhost:5001');
 
     console.log('[Socket] Connected to Socket.io server.');
 
