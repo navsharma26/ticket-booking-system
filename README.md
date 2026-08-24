@@ -1,6 +1,8 @@
 # Ticket Booking System
 
-A high-performance MERN (MongoDB, Express, React, Node.js) stack ticket booking platform featuring real-time seat reservation holds, ACID transaction safety, Socket.io updates, FIFO waitlists, QR code confirmation tickets, and background TTL workers.
+### 🚀 Live Deployment Links
+* **Frontend Web App**: [https://ticket-booking-frontend-vert.vercel.app](https://ticket-booking-frontend-vert.vercel.app)
+* **Backend API Server**: [https://ticket-booking-backend-dmjz.onrender.com](https://ticket-booking-backend-dmjz.onrender.com)
 
 ---
 
