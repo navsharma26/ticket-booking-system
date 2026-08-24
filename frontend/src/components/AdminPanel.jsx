@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 
+const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:5001';
+
 export default function AdminPanel({ onShowCreated }) {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
@@ -27,7 +29,7 @@ export default function AdminPanel({ onShowCreated }) {
     try {
       const token = localStorage.getItem('token');
       // Set future date time matching input
-      const res = await fetch('http://localhost:5001/api/auth/me', {
+      const res = await fetch(`${API_BASE}/api/auth/me`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       const user = await res.json();
@@ -41,7 +43,7 @@ export default function AdminPanel({ onShowCreated }) {
       // Let's first make sure we can create shows on the backend. Oh, we didn't add `/api/seats/show` to backend/routes/seats.js.
       // Let's add it! That is very professional. Let's do that right after.
       
-      const response = await fetch('http://localhost:5001/api/seats/show', {
+      const response = await fetch(`${API_BASE}/api/seats/show`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

@@ -17,6 +17,8 @@ import SeatMap from './components/SeatMap';
 import WaitlistModal from './components/WaitlistModal';
 import AdminPanel from './components/AdminPanel';
 
+const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:5001';
+
 export default function App() {
   const [currentUser, setCurrentUser] = useState(null);
   const [token, setToken] = useState(localStorage.getItem('token') || '');
@@ -45,7 +47,7 @@ export default function App() {
     setLoading(true);
     setError(null);
     try {
-      const response = await fetch('http://localhost:5001/api/auth/login', {
+      const response = await fetch(`${API_BASE}/api/auth/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password: 'password123' }),
@@ -71,7 +73,7 @@ export default function App() {
     setLoading(true);
     setError(null);
     try {
-      const response = await fetch('http://localhost:5001/api/auth/login', {
+      const response = await fetch(`${API_BASE}/api/auth/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email: loginEmail, password: loginPassword }),
@@ -103,7 +105,7 @@ export default function App() {
   // Fetch current user details
   useEffect(() => {
     if (token) {
-      fetch('http://localhost:5001/api/auth/me', {
+      fetch(`${API_BASE}/api/auth/me`, {
         headers: { Authorization: `Bearer ${token}` },
       })
         .then((res) => {
@@ -117,7 +119,7 @@ export default function App() {
 
   // Fetch Shows
   const fetchShows = () => {
-    fetch('http://localhost:5001/api/seats/shows')
+    fetch(`${API_BASE}/api/seats/shows`)
       .then((res) => res.json())
       .then((data) => setShows(data))
       .catch((err) => console.error('Error fetching shows:', err));
@@ -130,7 +132,7 @@ export default function App() {
   // Fetch Seats when show is selected
   useEffect(() => {
     if (selectedShow) {
-      fetch(`http://localhost:5001/api/seats/show/${selectedShow._id}`)
+      fetch(`${API_BASE}/api/seats/show/${selectedShow._id}`)
         .then((res) => res.json())
         .then((data) => setSeats(data))
         .catch((err) => console.error('Error fetching seats:', err));
@@ -144,7 +146,7 @@ export default function App() {
   }, [selectedShow, currentUser]);
 
   const fetchBookings = () => {
-    fetch('http://localhost:5001/api/bookings/me', {
+    fetch(`${API_BASE}/api/bookings/me`, {
       headers: { Authorization: `Bearer ${token}` },
     })
       .then((res) => res.json())
@@ -153,7 +155,7 @@ export default function App() {
   };
 
   const fetchWaitlists = () => {
-    fetch('http://localhost:5001/api/waitlist/me', {
+    fetch(`${API_BASE}/api/waitlist/me`, {
       headers: { Authorization: `Bearer ${token}` },
     })
       .then((res) => res.json())
@@ -189,7 +191,7 @@ export default function App() {
     setError(null);
 
     try {
-      const response = await fetch('http://localhost:5001/api/seats/hold', {
+      const response = await fetch(`${API_BASE}/api/seats/hold`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -216,7 +218,7 @@ export default function App() {
   const handleConfirmCheckout = async () => {
     setError(null);
     try {
-      const response = await fetch('http://localhost:5001/api/bookings/confirm', {
+      const response = await fetch(`${API_BASE}/api/bookings/confirm`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -234,7 +236,7 @@ export default function App() {
         setSelectedSeats([]);
         fetchBookings();
         // Refresh seats local state
-        fetch(`http://localhost:5001/api/seats/show/${selectedShow._id}`)
+        fetch(`${API_BASE}/api/seats/show/${selectedShow._id}`)
           .then((res) => res.json())
           .then((d) => setSeats(d));
       } else {
@@ -248,7 +250,7 @@ export default function App() {
   // Join Waitlist
   const handleJoinWaitlist = async (showId, category) => {
     try {
-      const response = await fetch('http://localhost:5001/api/waitlist/join', {
+      const response = await fetch(`${API_BASE}/api/waitlist/join`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
