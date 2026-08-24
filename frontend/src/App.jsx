@@ -11,7 +11,9 @@ import {
   CheckCircle,
   Clock,
   LogOut,
-  AlertCircle
+  AlertCircle,
+  Mail,
+  Shield
 } from 'lucide-react';
 import SeatMap from './components/SeatMap';
 import WaitlistModal from './components/WaitlistModal';
@@ -317,102 +319,170 @@ export default function App() {
 
   if (!currentUser) {
     return (
-      <div className="relative min-h-screen bg-slate-950 text-slate-100 flex flex-col items-center justify-center p-6 overflow-hidden">
+      <div className="relative min-h-screen bg-slate-950 text-slate-100 flex items-center justify-center p-6 overflow-hidden font-sans">
         {/* Ambient Glowing Background Elements */}
-        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-violet-600/20 rounded-full blur-[120px] pointer-events-none animate-pulse duration-[8s]" />
-        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-fuchsia-600/20 rounded-full blur-[120px] pointer-events-none animate-pulse duration-[12s]" />
+        <div className="absolute top-1/4 left-1/4 w-[500px] h-[500px] bg-violet-600/10 rounded-full blur-[120px] pointer-events-none animate-pulse duration-[8s]" />
+        <div className="absolute bottom-1/4 right-1/4 w-[500px] h-[500px] bg-fuchsia-600/10 rounded-full blur-[120px] pointer-events-none animate-pulse duration-[12s]" />
 
-        <div className="relative w-full max-w-md bg-slate-900/60 backdrop-blur-xl border border-slate-800/80 rounded-3xl p-8 shadow-[0_20px_50px_rgba(0,0,0,0.5)] space-y-8 transition-all hover:border-slate-700/50">
-          <div className="text-center space-y-3">
-            <div className="inline-flex p-3 bg-violet-500/10 rounded-2xl border border-violet-500/20 mb-1">
-              <Ticket className="text-violet-400 w-8 h-8 animate-bounce duration-[3s]" />
+        <div className="relative w-full max-w-6xl grid grid-cols-1 lg:grid-cols-12 gap-12 items-center z-10 py-8">
+          
+          {/* Left Column: Heading & One-click Logins */}
+          <div className="lg:col-span-7 space-y-8 text-left">
+            <div className="flex items-center gap-3">
+              <div className="p-2.5 bg-gradient-to-tr from-violet-600 to-fuchsia-600 rounded-2xl shadow-lg shadow-violet-500/20">
+                <Ticket className="text-white w-6 h-6" />
+              </div>
+              <span className="text-lg font-black bg-gradient-to-r from-violet-400 to-fuchsia-400 bg-clip-text text-transparent tracking-tight">
+                TicketVerse <span className="text-slate-500 font-normal text-xs uppercase ml-1">Beta</span>
+              </span>
             </div>
-            <h1 className="text-3xl font-extrabold tracking-tight bg-gradient-to-r from-violet-400 via-fuchsia-500 to-pink-500 bg-clip-text text-transparent">
-              TicketBooking
-            </h1>
-            <p className="text-xs text-slate-400 uppercase tracking-widest font-medium">
-              Secure Real-Time Reservation
-            </p>
-          </div>
 
-          {error && (
-            <div className="flex items-center gap-2.5 p-3.5 bg-rose-500/10 text-rose-300 border border-rose-500/20 rounded-xl text-sm animate-shake">
-              <AlertCircle size={16} className="shrink-0" />
-              <span>{error}</span>
+            <div className="space-y-4">
+              <span className="inline-flex px-3 py-1 bg-violet-500/10 border border-violet-500/20 text-violet-400 rounded-full text-xs font-bold tracking-wide">
+                Instant One-Click Demo Access
+              </span>
+              <h2 className="text-4xl lg:text-5xl font-black text-white tracking-tight leading-tight">
+                Real-time Event <br />
+                <span className="bg-gradient-to-r from-violet-400 via-fuchsia-400 to-pink-500 bg-clip-text text-transparent">Ticketverse System</span>
+              </h2>
+              <p className="text-slate-400 text-sm max-w-lg leading-relaxed">
+                Concert & movie ticketing platform engineered with visual seat maps, pessimistic DB locking, 5-minute hold TTL, and Socket.io real-time updates.
+              </p>
             </div>
-          )}
 
-          <form onSubmit={handleLogin} className="space-y-5">
-            <div className="space-y-1.5">
-              <label className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Email</label>
-              <input
-                type="email"
-                required
-                value={loginEmail}
-                onChange={(e) => setLoginEmail(e.target.value)}
-                className="w-full bg-slate-950/40 border border-slate-800 rounded-xl p-3.5 text-slate-200 focus:outline-none focus:border-violet-500 focus:ring-1 focus:ring-violet-500 text-sm transition-all placeholder:text-slate-600"
-                placeholder="you@example.com"
-              />
-            </div>
-            <div className="space-y-1.5">
-              <label className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Password</label>
-              <input
-                type="password"
-                required
-                value={loginPassword}
-                onChange={(e) => setLoginPassword(e.target.value)}
-                className="w-full bg-slate-950/40 border border-slate-800 rounded-xl p-3.5 text-slate-200 focus:outline-none focus:border-violet-500 focus:ring-1 focus:ring-violet-500 text-sm transition-all placeholder:text-slate-600"
-                placeholder="••••••••"
-              />
-            </div>
-            <button
-              type="submit"
-              disabled={loading}
-              className="w-full py-3.5 bg-gradient-to-r from-violet-600 to-fuchsia-600 hover:from-violet-500 hover:to-fuchsia-500 text-white rounded-xl font-bold shadow-lg shadow-violet-600/20 hover:shadow-violet-600/30 transition-all text-sm disabled:opacity-50 cursor-pointer active:scale-[0.98]"
-            >
-              {loading ? 'Signing in...' : 'Sign In'}
-            </button>
-          </form>
+            {/* One-click seed logins */}
+            <div className="bg-slate-900/40 backdrop-blur-md border border-slate-800/80 rounded-3xl p-6 space-y-4 max-w-lg">
+              <span className="text-[10px] font-extrabold text-violet-400 uppercase tracking-widest block">
+                One-Click Seed Account Logins
+              </span>
+              <div className="space-y-3">
+                <button
+                  onClick={() => handleQuickLogin('admin@example.com')}
+                  className="w-full p-4 bg-slate-950/40 hover:bg-violet-600/10 border border-slate-850 hover:border-violet-500/30 rounded-2xl flex items-center justify-between transition-all group cursor-pointer"
+                >
+                  <div className="flex items-center gap-3">
+                    <div className="p-2 bg-rose-500/10 rounded-xl border border-rose-500/20">
+                      <Shield className="w-4 h-4 text-rose-400" />
+                    </div>
+                    <div className="text-left">
+                      <h4 className="text-xs font-bold text-white group-hover:text-violet-300">System Administrator</h4>
+                      <p className="text-[10px] text-slate-500">admin@example.com</p>
+                    </div>
+                  </div>
+                  <span className="px-2 py-0.5 bg-rose-500/10 text-rose-400 border border-rose-500/20 rounded text-[9px] font-extrabold uppercase">Admin</span>
+                </button>
 
-          <div className="relative flex py-2 items-center">
-            <div className="flex-grow border-t border-slate-800/80"></div>
-            <span className="flex-shrink mx-4 text-slate-500 text-[10px] font-bold uppercase tracking-wider">Or</span>
-            <div className="flex-grow border-t border-slate-800/80"></div>
-          </div>
+                <button
+                  onClick={() => handleQuickLogin('organizer@example.com')}
+                  className="w-full p-4 bg-slate-950/40 hover:bg-fuchsia-600/10 border border-slate-850 hover:border-fuchsia-500/30 rounded-2xl flex items-center justify-between transition-all group cursor-pointer"
+                >
+                  <div className="flex items-center gap-3">
+                    <div className="p-2 bg-sky-500/10 rounded-xl border border-sky-500/20">
+                      <Calendar className="w-4 h-4 text-sky-400" />
+                    </div>
+                    <div className="text-left">
+                      <h4 className="text-xs font-bold text-white group-hover:text-fuchsia-300">Event Organiser</h4>
+                      <p className="text-[10px] text-slate-500">organizer@example.com</p>
+                    </div>
+                  </div>
+                  <span className="px-2 py-0.5 bg-sky-500/10 text-sky-400 border border-sky-500/20 rounded text-[9px] font-extrabold uppercase">Organiser</span>
+                </button>
 
-          <div className="flex justify-center">
-            <div id="googleBtn" className="w-full max-w-sm flex justify-center"></div>
-          </div>
-
-          {/* Quick roles switcher */}
-          <div className="border-t border-slate-800/80 pt-6 space-y-4">
-            <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider block text-center">
-              Quick Sign In (Simulation)
-            </span>
-            <div className="grid grid-cols-3 gap-2">
-              <button
-                onClick={() => handleQuickLogin('customer@example.com')}
-                className="py-2.5 bg-slate-950/20 hover:bg-violet-600/10 border border-slate-800 hover:border-violet-500/30 text-xs font-bold rounded-xl text-slate-300 hover:text-violet-300 transition-all cursor-pointer"
-              >
-                Customer
-              </button>
-              <button
-                onClick={() => handleQuickLogin('organizer@example.com')}
-                className="py-2.5 bg-slate-950/20 hover:bg-fuchsia-600/10 border border-slate-800 hover:border-fuchsia-500/30 text-xs font-bold rounded-xl text-slate-300 hover:text-fuchsia-300 transition-all cursor-pointer"
-              >
-                Organizer
-              </button>
-              <button
-                onClick={() => handleQuickLogin('admin@example.com')}
-                className="py-2.5 bg-slate-950/20 hover:bg-pink-600/10 border border-slate-800 hover:border-pink-500/30 text-xs font-bold rounded-xl text-slate-300 hover:text-pink-300 transition-all cursor-pointer"
-              >
-                Admin
-              </button>
+                <button
+                  onClick={() => handleQuickLogin('customer@example.com')}
+                  className="w-full p-4 bg-slate-950/40 hover:bg-pink-600/10 border border-slate-850 hover:border-pink-500/30 rounded-2xl flex items-center justify-between transition-all group cursor-pointer"
+                >
+                  <div className="flex items-center gap-3">
+                    <div className="p-2 bg-pink-500/10 rounded-xl border border-pink-500/20">
+                      <User className="w-4 h-4 text-pink-400" />
+                    </div>
+                    <div className="text-left">
+                      <h4 className="text-xs font-bold text-white group-hover:text-pink-300">Customer Account</h4>
+                      <p className="text-[10px] text-slate-500">customer@example.com</p>
+                    </div>
+                  </div>
+                  <span className="px-2 py-0.5 bg-pink-500/10 text-pink-400 border border-pink-500/20 rounded text-[9px] font-extrabold uppercase">Customer</span>
+                </button>
+              </div>
             </div>
           </div>
+
+          {/* Right Column: Interactive Login Form Card */}
+          <div className="lg:col-span-5 flex justify-center">
+            <div className="w-full max-w-md bg-slate-900/60 backdrop-blur-xl border border-slate-800/80 rounded-3xl p-8 shadow-[0_20px_50px_rgba(0,0,0,0.5)] space-y-6 hover:border-slate-700/50 transition-all">
+              {/* Card Header / Tabs */}
+              <div className="flex bg-slate-950/60 border border-slate-850 p-1.5 rounded-2xl">
+                <button className="flex-1 py-2 text-xs font-bold rounded-xl bg-violet-600 text-white shadow-md cursor-pointer transition-all">
+                  Sign In
+                </button>
+                <button onClick={() => alert('Account creation simulation: Use the one-click logins or regular accounts for testing.')} className="flex-1 py-2 text-xs font-bold rounded-xl text-slate-400 hover:text-slate-200 cursor-pointer transition-all">
+                  Create Account
+                </button>
+              </div>
+
+              {error && (
+                <div className="flex items-center gap-2.5 p-3.5 bg-rose-500/10 text-rose-300 border border-rose-500/20 rounded-xl text-sm animate-shake">
+                  <AlertCircle size={16} className="shrink-0" />
+                  <span>{error}</span>
+                </div>
+              )}
+
+              <form onSubmit={handleLogin} className="space-y-5">
+                <div className="space-y-1.5">
+                  <label className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Email Address</label>
+                  <div className="relative">
+                    <Mail size={16} className="absolute left-3.5 top-1/2 transform -translate-y-1/2 text-slate-500" />
+                    <input
+                      type="email"
+                      required
+                      value={loginEmail}
+                      onChange={(e) => setLoginEmail(e.target.value)}
+                      className="w-full bg-slate-950/40 border border-slate-800 rounded-xl py-3.5 pl-11 pr-4 text-slate-200 focus:outline-none focus:border-violet-500 focus:ring-1 focus:ring-violet-500 text-sm transition-all placeholder:text-slate-650"
+                      placeholder="name@example.com"
+                    />
+                  </div>
+                </div>
+
+                <div className="space-y-1.5">
+                  <label className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Password</label>
+                  <div className="relative">
+                    <Lock size={16} className="absolute left-3.5 top-1/2 transform -translate-y-1/2 text-slate-500" />
+                    <input
+                      type="password"
+                      required
+                      value={loginPassword}
+                      onChange={(e) => setLoginPassword(e.target.value)}
+                      className="w-full bg-slate-950/40 border border-slate-800 rounded-xl py-3.5 pl-11 pr-4 text-slate-200 focus:outline-none focus:border-violet-500 focus:ring-1 focus:ring-violet-500 text-sm transition-all placeholder:text-slate-650"
+                      placeholder="••••••••"
+                    />
+                  </div>
+                </div>
+
+                <button
+                  type="submit"
+                  disabled={loading}
+                  className="w-full py-3.5 bg-gradient-to-r from-violet-600 to-fuchsia-600 hover:from-violet-500 hover:to-fuchsia-500 text-white rounded-xl font-bold shadow-lg shadow-violet-600/20 hover:shadow-violet-600/30 transition-all text-sm disabled:opacity-50 cursor-pointer active:scale-[0.98] flex items-center justify-center gap-1"
+                >
+                  <span>{loading ? 'Signing in...' : 'Sign In to Account'}</span>
+                  <span className="font-light">→</span>
+                </button>
+              </form>
+
+              <div className="relative flex py-2 items-center">
+                <div className="flex-grow border-t border-slate-800/80"></div>
+                <span className="flex-shrink mx-4 text-slate-500 text-[10px] font-bold uppercase tracking-wider">Or</span>
+                <div className="flex-grow border-t border-slate-800/80"></div>
+              </div>
+
+              <div className="flex justify-center">
+                <div id="googleBtn" className="w-full max-w-sm flex justify-center"></div>
+              </div>
+            </div>
+          </div>
+
         </div>
       </div>
-    );
+      );
   }
 
   return (
