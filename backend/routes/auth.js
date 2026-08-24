@@ -97,4 +97,52 @@ router.get('/me', protect, async (req, res) => {
   }
 });
 
+// @desc    Authenticate with Google ID Token
+// @route   POST /api/auth/google
+// @access  Public
+router.post('/google', async (req, res) => {
+  try {
+    const { token } = req.body;
+    if (!token) {
+      return res.status(400).json({ message: 'Token is required' });
+    }
+
+    // Verify token using Google's tokeninfo API endpoint
+    const googleRes = await fetch(`https://oauth2.googleapis.com/tokeninfo?id_token=${token}`);
+    if (!googleRes.ok) {
+      return res.status(400).json({ message: 'Invalid Google token' });
+    }
+
+    const payload = await googleRes.json();
+    const { email, name } = payload;
+
+    if (!email) {
+      return res.status(400).json({ message: 'Email not provided by Google' });
+    }
+
+    // Find or create user
+    let user = await User.findOne({ email });
+    if (!user) {
+      // Create user with a random password since password is required by schema
+      const randomPassword = Math.random().toString(36).slice(-10);
+      user = await User.create({
+        name: name || email.split('@')[0],
+        email,
+        password: randomPassword,
+        role: 'customer',
+      });
+    }
+
+    res.json({
+      _id: user._id,
+      name: user.name,
+      email: user.email,
+      role: user.role,
+      token: generateToken(user._id),
+    });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
 export default router;

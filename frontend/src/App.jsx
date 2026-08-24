@@ -93,6 +93,44 @@ export default function App() {
     }
   };
 
+  // Google Login Callback handler
+  const handleGoogleCredentialResponse = async (response) => {
+    setLoading(true);
+    setError(null);
+    try {
+      const res = await fetch(`${API_BASE}/api/auth/google`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ token: response.credential }),
+      });
+      const data = await res.json();
+      if (res.ok) {
+        setToken(data.token);
+        localStorage.setItem('token', data.token);
+        setCurrentUser(data);
+      } else {
+        setError(data.message);
+      }
+    } catch (err) {
+      setError('Could not connect to Google authentication service.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    if (!currentUser && window.google) {
+      window.google.accounts.id.initialize({
+        client_id: import.meta.env.VITE_GOOGLE_CLIENT_ID || '1046187063124-7r641k56sk0l3597dfh0qgrh51624u7s.apps.googleusercontent.com',
+        callback: handleGoogleCredentialResponse,
+      });
+      window.google.accounts.id.renderButton(
+        document.getElementById('googleBtn'),
+        { theme: 'filled_black', size: 'large', shape: 'pill', width: 384 }
+      );
+    }
+  }, [currentUser]);
+
   const handleLogout = () => {
     localStorage.removeItem('token');
     setToken('');
@@ -335,6 +373,16 @@ export default function App() {
               {loading ? 'Signing in...' : 'Sign In'}
             </button>
           </form>
+
+          <div className="relative flex py-2 items-center">
+            <div className="flex-grow border-t border-slate-800/80"></div>
+            <span className="flex-shrink mx-4 text-slate-500 text-[10px] font-bold uppercase tracking-wider">Or</span>
+            <div className="flex-grow border-t border-slate-800/80"></div>
+          </div>
+
+          <div className="flex justify-center">
+            <div id="googleBtn" className="w-full max-w-sm flex justify-center"></div>
+          </div>
 
           {/* Quick roles switcher */}
           <div className="border-t border-slate-800/80 pt-6 space-y-4">
