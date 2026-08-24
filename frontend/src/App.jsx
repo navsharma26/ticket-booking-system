@@ -121,7 +121,7 @@ export default function App() {
   useEffect(() => {
     if (!currentUser && window.google) {
       window.google.accounts.id.initialize({
-        client_id: import.meta.env.VITE_GOOGLE_CLIENT_ID || '1046187063124-7r641k56sk0l3597dfh0qgrh51624u7s.apps.googleusercontent.com',
+        client_id: import.meta.env.VITE_GOOGLE_CLIENT_ID || '294318417502-8im081nbm235m8egr3bu361gueoara09.apps.googleusercontent.com',
         callback: handleGoogleCredentialResponse,
       });
       window.google.accounts.id.renderButton(
