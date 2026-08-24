@@ -116,36 +116,39 @@ export default function SeatMap({
     const isMyHold = seat.status === 'held' && seat.heldBy === userId;
 
     if (seat.status === 'booked') {
-      return 'bg-rose-600 border-rose-800 text-rose-100 cursor-not-allowed';
+      return 'bg-slate-900 border-slate-800/80 text-slate-600 cursor-not-allowed opacity-30 line-through';
     }
     if (isMyHold || isSelected) {
-      return 'bg-amber-500 border-amber-700 text-amber-950 hover:bg-amber-400 font-bold';
+      return 'bg-gradient-to-tr from-amber-400 via-amber-500 to-orange-400 border-amber-600 text-slate-950 font-extrabold shadow-[0_0_15px_rgba(245,158,11,0.45)] scale-105';
     }
     if (seat.status === 'held') {
-      return 'bg-rose-900 border-rose-950 text-rose-400 cursor-not-allowed opacity-50';
+      return 'bg-rose-950/20 border-rose-900/30 text-rose-800/40 cursor-not-allowed opacity-30';
     }
-    // Available
-    return 'bg-emerald-500 border-emerald-700 text-emerald-950 hover:bg-emerald-400';
+    // Available - differentiate VIP and General
+    if (seat.category === 'VIP') {
+      return 'bg-gradient-to-tr from-violet-600/90 to-indigo-500/90 border-violet-500/60 text-white hover:from-violet-500 hover:to-indigo-400 hover:shadow-[0_0_12px_rgba(139,92,246,0.4)] hover:scale-105';
+    }
+    return 'bg-gradient-to-tr from-slate-800 to-slate-700 border-slate-700/80 text-slate-300 hover:from-slate-700 hover:to-slate-650 hover:text-white hover:shadow-[0_0_10px_rgba(255,255,255,0.05)] hover:scale-105';
   };
 
   return (
-    <div className="bg-slate-800/80 backdrop-blur-md p-6 rounded-2xl border border-slate-700 space-y-6">
-      <div className="text-center">
-        <div className="w-full bg-slate-900 h-2 rounded-full mb-2 border border-slate-800" />
-        <span className="text-xs text-slate-500 uppercase tracking-widest font-semibold">Stage</span>
+    <div className="bg-slate-900/60 backdrop-blur-xl p-8 rounded-2xl border border-slate-800/80 space-y-8 shadow-inner">
+      <div className="relative text-center pb-6">
+        <div className="w-2/3 mx-auto bg-gradient-to-r from-transparent via-violet-500 to-transparent h-[3px] rounded-full opacity-80 shadow-[0_0_15px_rgba(139,92,246,0.8)]" />
+        <span className="text-[10px] text-violet-400 uppercase tracking-widest font-extrabold block mt-2.5">Stage / Screen</span>
       </div>
 
-      <div className="flex flex-col gap-3 justify-center items-center overflow-x-auto pb-4">
+      <div className="flex flex-col gap-3.5 justify-center items-center overflow-x-auto pb-4 px-2">
         {Object.entries(rows).map(([rowLabel, rowSeats]) => (
-          <div key={rowLabel} className="flex gap-2 items-center">
-            <span className="text-sm font-bold text-slate-500 w-6 text-center">{rowLabel}</span>
-            <div className="flex gap-2">
+          <div key={rowLabel} className="flex gap-3.5 items-center">
+            <span className="text-xs font-black text-slate-600 w-5 text-center">{rowLabel}</span>
+            <div className="flex gap-2.5">
               {rowSeats.map((seat) => (
                 <button
                   key={seat._id}
                   onClick={() => handleSeatClick(seat)}
                   disabled={seat.status === 'booked' || (seat.status === 'held' && seat.heldBy !== userId)}
-                  className={`w-10 h-10 rounded-lg border flex items-center justify-center text-xs font-semibold transition-all duration-300 transform active:scale-95 shadow-lg ${getSeatColorClass(
+                  className={`w-9 h-9 rounded-xl border flex items-center justify-center text-xs font-bold transition-all duration-300 transform active:scale-90 cursor-pointer shadow-md ${getSeatColorClass(
                     seat
                   )}`}
                   title={`Seat ${seat.seatNumber} (${seat.category} - $${
@@ -161,21 +164,25 @@ export default function SeatMap({
       </div>
 
       {/* Legend */}
-      <div className="flex justify-center gap-6 text-sm border-t border-slate-700 pt-4 flex-wrap">
+      <div className="flex justify-center gap-6 text-xs border-t border-slate-800/60 pt-5 flex-wrap font-semibold text-slate-400">
         <div className="flex items-center gap-2">
-          <div className="w-4 h-4 bg-emerald-500 border border-emerald-700 rounded-sm" />
-          <span>Available</span>
+          <div className="w-3.5 h-3.5 bg-gradient-to-tr from-violet-600 to-indigo-500 border border-violet-500/60 rounded-md" />
+          <span>VIP Available</span>
         </div>
         <div className="flex items-center gap-2">
-          <div className="w-4 h-4 bg-amber-500 border border-amber-700 rounded-sm" />
-          <span>Selected / Your Hold</span>
+          <div className="w-3.5 h-3.5 bg-gradient-to-tr from-slate-800 to-slate-700 border border-slate-700/80 rounded-md" />
+          <span>General Available</span>
         </div>
         <div className="flex items-center gap-2">
-          <div className="w-4 h-4 bg-rose-900 border border-rose-950 rounded-sm opacity-50" />
-          <span>Held by others</span>
+          <div className="w-3.5 h-3.5 bg-gradient-to-tr from-amber-400 to-orange-400 border border-amber-600 rounded-md shadow-[0_0_8px_rgba(245,158,11,0.3)]" />
+          <span>Selected / Yours</span>
         </div>
         <div className="flex items-center gap-2">
-          <div className="w-4 h-4 bg-rose-600 border border-rose-800 rounded-sm" />
+          <div className="w-3.5 h-3.5 bg-rose-950/20 border border-rose-900/30 rounded-md opacity-50" />
+          <span>Held (Others)</span>
+        </div>
+        <div className="flex items-center gap-2 text-slate-500">
+          <div className="w-3.5 h-3.5 bg-slate-900 border border-slate-800/80 rounded-md line-through" />
           <span>Booked</span>
         </div>
       </div>
